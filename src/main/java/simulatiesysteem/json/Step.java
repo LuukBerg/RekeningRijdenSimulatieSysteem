@@ -1,17 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package simulatiesysteem.json;
 
 import java.io.Serializable;
 import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Data;
 
 /**
  *
- * @author u
+ * @author Rabie Bkhiti
  */
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Step implements Serializable {
 
     private long id;
@@ -20,11 +22,10 @@ public class Step implements Serializable {
     private Date timestamp;
     private String trackerId;
 
-    public Step(long id, double x, double y, Date timestamp, String trackerId) {
-        this.id = id;
+    public Step(double x, double y, Date timestamp) {
         this.x = x;
         this.y = y;
         this.timestamp = timestamp;
-        this.trackerId = trackerId;
     }
+
 }

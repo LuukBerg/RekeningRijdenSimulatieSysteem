@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package simulatiesysteem.jms.gateway;
 
 import com.rabbitmq.client.*;
@@ -11,7 +7,7 @@ import java.util.concurrent.TimeoutException;
 
 /**
  *
- * @author u
+ * @author Rabie Bkhiti
  */
 public class MessageSenderGateway {
 

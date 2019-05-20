@@ -48,8 +48,8 @@ public class Simulation {
         double lat = point.get(0);
         double lon = point.get(1);
 
-//        String output = String.format("%s: Stepped to [%7.6f, %7.6f].", trackerId, lat, lon);
-//        System.out.println(output);
+        String output = String.format("%s: Stepped to [%7.6f, %7.6f].", trackerId, lat, lon);
+        System.out.println(output);
 
         try {
             AMQP.BasicProperties props = new AMQP.BasicProperties.Builder()
@@ -59,7 +59,12 @@ public class Simulation {
 
             Date date = new Date();
 
-            Step step = new Step(0, lat, lon, date, trackerId);
+            Step step = new Step();
+            step.setId(0);
+            step.setTimestamp(date);
+            step.setX(lon);
+            step.setY(lat);
+            step.setTrackerId(trackerId);
 
             sender.SendMessage(new Genson().serialize(step), props);
         } catch (IOException ex) {
