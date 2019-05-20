@@ -24,7 +24,7 @@ public class MessageSenderGateway {
 
         ConnectionFactory factory = new ConnectionFactory();
 
-        factory.setHost("192.168.24.180:1011");
+        factory.setHost("192.168.24.180");
         factory.setPort(1011);
 
         Connection connection = null;

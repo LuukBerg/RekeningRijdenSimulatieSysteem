@@ -5,7 +5,6 @@
  */
 package simulatiesysteem.jms;
 
-import com.rabbitmq.client.DeliverCallback;
 import simulatiesysteem.jms.gateway.MessageSenderGateway;
 
 /**
