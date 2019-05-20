@@ -5,6 +5,7 @@
  */
 package simulatiesysteem.jms;
 
+import com.rabbitmq.client.DeliverCallback;
 import simulatiesysteem.jms.gateway.MessageSenderGateway;
 
 /**
@@ -14,13 +15,17 @@ import simulatiesysteem.jms.gateway.MessageSenderGateway;
 public class SimulationGateway {
 
     private MessageSenderGateway sender;
-    
+
     public SimulationGateway() {
         sender = new MessageSenderGateway("StepChannel");
-        
+
     }
-    
-    private void initSender(){
-    
+
+    private void initSender() {
+        sender();
     }
+
+    private void sender() {
+    }
+
 }

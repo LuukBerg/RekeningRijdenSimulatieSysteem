@@ -18,5 +18,4 @@ public class Serializer {
     public static String serialize(Object obj){
         return new Genson().serialize(obj);
     }
-
 }
