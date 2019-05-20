@@ -26,12 +26,14 @@ import simulatiesysteem.json.Step;
 public class Simulation {
 
     private MessageSenderGateway sender;
+    private AMQP.BasicProperties props;
     private final String trackerId;
     private final List<List<Double>> coordinates;
     private int cursor;
 
-    public Simulation(String trackerId, RootObject obj, MessageSenderGateway sender) {
+    public Simulation(String trackerId, RootObject obj, MessageSenderGateway sender, AMQP.BasicProperties props) {
         this.sender = sender;
+        this.props = props;
         this.trackerId = trackerId;
         List<Route> routes = obj.getRoutes();
 
@@ -52,11 +54,6 @@ public class Simulation {
         System.out.println(output);
 
         try {
-            AMQP.BasicProperties props = new AMQP.BasicProperties.Builder()
-                    .correlationId("")
-                    .replyTo("")
-                    .build();
-
             Date date = new Date();
 
             Step step = new Step();
