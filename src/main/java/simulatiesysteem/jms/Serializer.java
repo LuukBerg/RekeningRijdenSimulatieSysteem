@@ -12,10 +12,18 @@ import com.owlike.genson.Genson;
  * @author u
  */
 public class Serializer {
-    public static <T> T deserialize(String str, Class<T> t){
-        return new Genson().deserialize(str,t);
+
+    private final static Genson genson;
+
+    static Serializer() {
+        genson = new Genson();
     }
-    public static String serialize(Object obj){
-        return new Genson().serialize(obj);
+
+    public static <T> T deserialize(String str, Class<T> t) {
+        return genson.deserialize(str, t);
+    }
+
+    public static String serialize(Object obj) {
+        return genson.serialize(obj);
     }
 }
