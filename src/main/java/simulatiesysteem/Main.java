@@ -26,7 +26,6 @@ import simulatiesysteem.json.RootObject;
 public class Main {
 
     private static final String BASE_URL = "http://192.168.24.14:5000/route/v1/driving/%7.6f,%7.6f;%7.6f,%7.6f?overview=full&geometries=geojson";
-    private static final int MAX_VEHICLE_AMOUNT = 100;
     private final String[] trackers;
     private Set<Simulation> simulations;
     private final Gson gson;
@@ -48,9 +47,8 @@ public class Main {
         if (argument.equals("-v") || argument.equals("--vehicles")) {
             argument = args[1];
             int amount = Integer.parseInt(argument);
-            if (amount <= 0 || amount > MAX_VEHICLE_AMOUNT) {
-                String message = String.format("The maximum amount of vehicles is %d.", MAX_VEHICLE_AMOUNT);
-                System.out.println(message);
+            if (amount <= 0) {
+                System.out.println("An invalid amount of vehicles was specified.");
             } else {
                 new Main().run(amount);
             }
