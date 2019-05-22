@@ -5,15 +5,13 @@
  */
 package simulatiesysteem;
 
-import com.owlike.genson.Genson;
 import com.rabbitmq.client.AMQP;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import simulatiesysteem.jms.Serializer;
 import simulatiesysteem.jms.gateway.MessageSenderGateway;
 import simulatiesysteem.json.RootObject;
 import simulatiesysteem.json.Route;
@@ -25,8 +23,8 @@ import simulatiesysteem.json.Step;
  */
 public class Simulation {
 
-    private MessageSenderGateway sender;
-    private AMQP.BasicProperties props;
+    private final MessageSenderGateway sender;
+    private final AMQP.BasicProperties props;
     private final String trackerId;
     private final List<List<Double>> coordinates;
     private int cursor;
@@ -63,7 +61,7 @@ public class Simulation {
             step.setY(lat);
             step.setTrackerId(trackerId);
 
-            sender.SendMessage(new Genson().serialize(step), props);
+            sender.SendMessage(Serializer.serialize(step), props);
         } catch (IOException ex) {
             Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
         }
