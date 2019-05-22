@@ -33,9 +33,9 @@ public class Main {
     private final String[] trackers;
     private Set<Simulation> simulations;
     private final Gson gson;
-    private Random random;
-    private MessageSenderGateway sender;
-    private AMQP.BasicProperties props;
+    private final Random random;
+    private final MessageSenderGateway sender;
+    private final AMQP.BasicProperties props;
 
     private static final double START_LAT = 44;
     private static final double START_LONG = -0.5;
