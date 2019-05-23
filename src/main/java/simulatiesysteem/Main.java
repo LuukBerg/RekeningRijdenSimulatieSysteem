@@ -34,7 +34,7 @@ public class Main {
     private static final double START_LONG = 44;
     private static final double END_LAT = 3;
     private static final double END_LONG = 48;
-    private static final int STEP_TIME = 10;
+    private static final int STEP_TIME = 1;
     
     private final String[] trackers;
     private final Gson gson;
@@ -85,6 +85,11 @@ public class Main {
         simulations = new HashSet<>(vehicles);
         for (int i = 0; i < vehicles; i++) {
             String trackerId = trackers[i];
+            Simulation simulation = new Simulation(trackerId, sender, props);
+            simulations.add(simulation);
+        }
+        
+        simulations.parallelStream().forEach((simulation) -> {
             double startLat = randomDouble(START_LAT, END_LAT);
             double startLong = randomDouble(START_LONG, END_LONG);
             double endLat = randomDouble(START_LAT, END_LAT);
@@ -92,11 +97,12 @@ public class Main {
             RootObject obj = fetchRoutes(startLat, startLong, endLat, endLong);
             if (obj == null) {
                 System.out.println("Failed to retrieve routes.");
-                break;
+            } else{
+                String message = String.format("%s: Fetching routes.", simulation.getTrackerId());
+                System.out.println(message);
             }
-            Simulation simulation = new Simulation(trackerId, obj, sender, props);
-            simulations.add(simulation);
-        }
+            simulation.initialize(obj);
+        });
 
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
