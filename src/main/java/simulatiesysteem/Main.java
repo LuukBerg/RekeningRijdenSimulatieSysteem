@@ -37,10 +37,11 @@ public class Main {
     private final MessageSenderGateway sender;
     private final AMQP.BasicProperties props;
 
-    private static final double START_LAT = 44;
-    private static final double START_LONG = -0.5;
-    private static final double END_LAT = 48;
-    private static final double END_LONG = 3;
+    private static final double START_LONG = 44;
+    private static final double START_LAT = -0.5;
+    private static final double END_LONG = 48;
+    private static final double END_LAT = 3;
+    private static final int STEP_TIME = 10;
 
     /**
      * @param args the command line arguments
@@ -111,7 +112,7 @@ public class Main {
                     }
                 });
             }
-        }, 0, 10 * 1000);
+        }, 0, STEP_TIME * 1000);
     }
     
     private double randomDouble(double min, double max){
