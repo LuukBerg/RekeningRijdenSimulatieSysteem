@@ -30,18 +30,19 @@ import simulatiesysteem.json.RootObject;
 public class Main {
 
     private static final String BASE_URL = "http://192.168.24.14:5000/route/v1/driving/%7.6f,%7.6f;%7.6f,%7.6f?overview=full&geometries=geojson";
+    private static final double START_LAT = -0.5;
+    private static final double START_LONG = 44;
+    private static final double END_LAT = 3;
+    private static final double END_LONG = 48;
+    private static final int STEP_TIME = 10;
+    
     private final String[] trackers;
-    private Set<Simulation> simulations;
     private final Gson gson;
     private final Random random;
     private final MessageSenderGateway sender;
     private final AMQP.BasicProperties props;
-
-    private static final double START_LONG = 44;
-    private static final double START_LAT = -0.5;
-    private static final double END_LONG = 48;
-    private static final double END_LAT = 3;
-    private static final int STEP_TIME = 10;
+    
+    private Set<Simulation> simulations;
 
     /**
      * @param args the command line arguments
