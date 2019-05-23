@@ -34,7 +34,7 @@ public class Main {
     private static final double START_LONG = 44;
     private static final double END_LAT = 3;
     private static final double END_LONG = 48;
-    private static final int STEP_TIME = 1;
+    private static final int STEP_TIME = 10;
     
     private final String[] trackers;
     private final Gson gson;
@@ -50,6 +50,7 @@ public class Main {
     public static void main(String[] args) {
         if (args.length <= 1) {
             System.out.println("Invalid arguments specified.");
+            return;
         }
 
         String argument = args[0];
