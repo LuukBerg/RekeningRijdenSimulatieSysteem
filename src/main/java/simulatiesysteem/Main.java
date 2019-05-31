@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Random;
@@ -101,6 +102,8 @@ public class Main {
             Simulation simulation = new Simulation(trackerId, sender, props);
             simulations.add(simulation);
         }
+        
+        simulations = Collections.synchronizedSet(simulations);
         
         simulations.parallelStream().forEach((simulation) -> {
             double startLat = randomDouble(START_LAT, END_LAT);
