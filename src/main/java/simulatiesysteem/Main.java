@@ -30,17 +30,19 @@ import simulatiesysteem.json.RootObject;
 public class Main {
 
     private static final String BASE_URL = "http://192.168.24.14:5000/route/v1/driving/%7.6f,%7.6f;%7.6f,%7.6f?overview=full&geometries=geojson";
+    private static final double START_LAT = -0.5;
+    private static final double START_LONG = 44;
+    private static final double END_LAT = 3;
+    private static final double END_LONG = 48;
+    private static final int STEP_TIME = 10;
+    
     private final String[] trackers;
-    private Set<Simulation> simulations;
     private final Gson gson;
     private final Random random;
     private final MessageSenderGateway sender;
     private final AMQP.BasicProperties props;
-
-    private static final double START_LAT = 44;
-    private static final double START_LONG = -0.5;
-    private static final double END_LAT = 48;
-    private static final double END_LONG = 3;
+    
+    private Set<Simulation> simulations;
 
     /**
      * @param args the command line arguments
@@ -48,6 +50,7 @@ public class Main {
     public static void main(String[] args) {
         if (args.length <= 1) {
             System.out.println("Invalid arguments specified.");
+            return;
         }
 
         String argument = args[0];
@@ -83,6 +86,11 @@ public class Main {
         simulations = new HashSet<>(vehicles);
         for (int i = 0; i < vehicles; i++) {
             String trackerId = trackers[i];
+            Simulation simulation = new Simulation(trackerId, sender, props);
+            simulations.add(simulation);
+        }
+        
+        simulations.parallelStream().forEach((simulation) -> {
             double startLat = randomDouble(START_LAT, END_LAT);
             double startLong = randomDouble(START_LONG, END_LONG);
             double endLat = randomDouble(START_LAT, END_LAT);
@@ -90,11 +98,12 @@ public class Main {
             RootObject obj = fetchRoutes(startLat, startLong, endLat, endLong);
             if (obj == null) {
                 System.out.println("Failed to retrieve routes.");
-                break;
+            } else{
+                String message = String.format("%s: Fetching routes.", simulation.getTrackerId());
+                System.out.println(message);
             }
-            Simulation simulation = new Simulation(trackerId, obj, sender, props);
-            simulations.add(simulation);
-        }
+            simulation.initialize(obj);
+        });
 
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -111,7 +120,7 @@ public class Main {
                     }
                 });
             }
-        }, 0, 10 * 1000);
+        }, 0, STEP_TIME * 1000);
     }
     
     private double randomDouble(double min, double max){

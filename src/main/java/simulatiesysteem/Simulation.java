@@ -26,21 +26,31 @@ public class Simulation {
     private final MessageSenderGateway sender;
     private final AMQP.BasicProperties props;
     private final String trackerId;
-    private final List<List<Double>> coordinates;
+
+    private List<List<Double>> coordinates;
+    private boolean initialized;
     private int cursor;
 
-    public Simulation(String trackerId, RootObject obj, MessageSenderGateway sender, AMQP.BasicProperties props) {
+    public Simulation(String trackerId, MessageSenderGateway sender, AMQP.BasicProperties props) {
         this.sender = sender;
         this.props = props;
         this.trackerId = trackerId;
+    }
+
+    public String getTrackerId() {
+        return trackerId;
+    }
+
+    public void initialize(RootObject obj) {
         List<Route> routes = obj.getRoutes();
 
         //TODO - Error handling voor lege collecties en dergelijke.
         coordinates = routes.get(0).getGeometry().getCoordinates();
+        initialized = true;
     }
 
     public boolean step() {
-        if (cursor == coordinates.size()) {
+        if (!initialized || cursor == coordinates.size()) {
             return false;
         }
 
