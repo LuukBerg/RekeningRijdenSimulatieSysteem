@@ -6,6 +6,7 @@
             "request": "launch",
             "mainClass": "simulatiesysteem.Main",
             "projectName": "simulatiesysteem",
+            "console": "integratedTerminal",
             "args": "-v 10"
         }
     ]
