@@ -36,7 +36,7 @@ public class Main {
     private static final double START_LONG = 44;
     private static final double END_LAT = 3;
     private static final double END_LONG = 48;
-    private static final int STEP_TIME = 10;
+    private static final int STEP_TIME = 1;
     
     private final String[] trackers;
     private final Gson gson;
