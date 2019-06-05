@@ -77,7 +77,7 @@ public class Main {
         // NOTE: Same buffer size and seed as in the administratie test data.
         byte[] buffer = new byte[10];
         Random random = new Random(665198248186247L);
-        for (int i = 0; i < 2000; i += 1) {
+        for (int i = 0; i < this.trackers.length; i += 1) {
             random.nextBytes(buffer);
             String uuid = "FR_" + UUID.nameUUIDFromBytes(buffer).toString();
             this.trackers[i] = uuid;
