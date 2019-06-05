@@ -72,12 +72,12 @@ public class Main {
     private Main()
     {
         this.gson = new Gson();
-        this.trackers = new String[500];
+        this.trackers = new String[2000];
 
         // NOTE: Same buffer size and seed as in the administratie test data.
         byte[] buffer = new byte[10];
         Random random = new Random(665198248186247L);
-        for (int i = 0; i < 500; i += 1) {
+        for (int i = 0; i < 2000; i += 1) {
             random.nextBytes(buffer);
             String uuid = "FR_" + UUID.nameUUIDFromBytes(buffer).toString();
             this.trackers[i] = uuid;
