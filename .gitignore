@@ -109,3 +109,5 @@ fabric.properties
 .classpath
 .project
 org.eclipse.*.prefs
+
+.vscode

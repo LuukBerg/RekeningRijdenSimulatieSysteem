@@ -38,7 +38,6 @@ public class Main {
     private static final double END_LONG = 48;
     private static final int STEP_TIME = 1;
     
-    private final String[] trackers;
     private final Gson gson;
     private final Random random;
     private final MessageSenderGateway sender;
@@ -72,17 +71,6 @@ public class Main {
     private Main()
     {
         this.gson = new Gson();
-        this.trackers = new String[2000];
-
-        // NOTE: Same buffer size and seed as in the administratie test data.
-        byte[] buffer = new byte[10];
-        Random random = new Random(665198248186247L);
-        for (int i = 0; i < this.trackers.length; i += 1) {
-            random.nextBytes(buffer);
-            String uuid = "FR_" + UUID.nameUUIDFromBytes(buffer).toString();
-            this.trackers[i] = uuid;
-        }
-
         this.random = new Random();
         this.sender = new MessageSenderGateway("StepChannel");
         this.props = new AMQP.BasicProperties.Builder()
@@ -91,14 +79,16 @@ public class Main {
                 .build();
     }
 
-    private void run(int vehicles) {
-        if (vehicles > trackers.length) {
-            vehicles = trackers.length;
-        }
-
+    private void run(int vehicles)
+    {
         simulations = new HashSet<>(vehicles);
+
+        // NOTE: Same buffer size and seed as in the administratie test data.
+        byte[] buffer = new byte[10];
+        Random random = new Random(665198248186247L);
         for (int i = 0; i < vehicles; i++) {
-            String trackerId = trackers[i];
+            random.nextBytes(buffer);
+            String trackerId = "FR_" + UUID.nameUUIDFromBytes(buffer).toString();
             Simulation simulation = new Simulation(trackerId, sender, props);
             simulations.add(simulation);
         }
