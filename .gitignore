@@ -104,3 +104,8 @@ fabric.properties
 /rekeningsrijdersapplicatie/target/
 /rekeningsrijdersapplicatie/nbproject/
 /target/
+
+.factorypath
+.classpath
+.project
+org.eclipse.*.prefs
