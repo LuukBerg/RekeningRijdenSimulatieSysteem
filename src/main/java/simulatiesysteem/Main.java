@@ -14,6 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Random;
 import java.util.Set;
@@ -22,6 +23,9 @@ import java.util.TimerTask;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import simulatiesysteem.api.TrackerBaseAPI;
+import simulatiesysteem.api.TrackerBelgiumAPI;
+import simulatiesysteem.api.TrackerCollectionAPI;
 import simulatiesysteem.jms.gateway.MessageSenderGateway;
 import simulatiesysteem.json.RootObject;
 
@@ -37,12 +41,12 @@ public class Main {
     private static final double END_LAT = 3;
     private static final double END_LONG = 48;
     private static final int STEP_TIME = 1;
-    
-    private final String[] trackers;
+
     private final Gson gson;
     private final Random random;
     private final MessageSenderGateway sender;
     private final AMQP.BasicProperties props;
+    private final TrackerCollectionAPI trackerApi;
     
     private Set<Simulation> simulations;
 
@@ -69,20 +73,9 @@ public class Main {
         }
     }
 
-    private Main()
-    {
+    private Main() {
         this.gson = new Gson();
-        this.trackers = new String[2000];
-
-        // NOTE: Same buffer size and seed as in the administratie test data.
-        byte[] buffer = new byte[10];
-        Random random = new Random(665198248186247L);
-        for (int i = 0; i < this.trackers.length; i += 1) {
-            random.nextBytes(buffer);
-            String uuid = "FR_" + UUID.nameUUIDFromBytes(buffer).toString();
-            this.trackers[i] = uuid;
-        }
-
+        this.trackerApi = new TrackerCollectionAPI();
         this.random = new Random();
         this.sender = new MessageSenderGateway("StepChannel");
         this.props = new AMQP.BasicProperties.Builder()
@@ -92,19 +85,27 @@ public class Main {
     }
 
     private void run(int vehicles) {
-        if (vehicles > trackers.length) {
-            vehicles = trackers.length;
+        Set<String> trackers = new HashSet<>();
+        // NOTE: Same buffer size and seed as in the administratie test data.
+        byte[] buffer = new byte[10];
+        Random r = new Random(665198248186247L);
+        for (int i = 0; i < 2000; i += 1) {
+            r.nextBytes(buffer);
+            String uuid = "FR_" + UUID.nameUUIDFromBytes(buffer).toString();
+            trackers.add(uuid);
         }
+        
+        Set<String> ts = trackerApi.getTrackers();
+        trackers.addAll(ts);
 
         simulations = new HashSet<>(vehicles);
-        for (int i = 0; i < vehicles; i++) {
-            String trackerId = trackers[i];
+        for(String trackerId : trackers){
             Simulation simulation = new Simulation(trackerId, sender, props);
             simulations.add(simulation);
         }
-        
+
         simulations = Collections.synchronizedSet(simulations);
-        
+
         simulations.parallelStream().forEach((simulation) -> {
             double startLat = randomDouble(START_LAT, END_LAT);
             double startLong = randomDouble(START_LONG, END_LONG);
@@ -113,7 +114,7 @@ public class Main {
             RootObject obj = fetchRoutes(startLat, startLong, endLat, endLong);
             if (obj == null) {
                 System.out.println("Failed to retrieve routes.");
-            } else{
+            } else {
                 String message = String.format("%s: Fetching routes.", simulation.getTrackerId());
                 System.out.println(message);
             }
@@ -129,16 +130,18 @@ public class Main {
                     System.out.println("Simulation complete.");
                 }
 
-                simulations.forEach((simulation) -> {
+                Iterator<Simulation> iterator = simulations.iterator();
+                while(iterator.hasNext()){
+                    Simulation simulation = iterator.next();
                     if (!simulation.step()) {
                         simulations.remove(simulation);
                     }
-                });
+                }
             }
         }, 0, STEP_TIME * 1000);
     }
-    
-    private double randomDouble(double min, double max){
+
+    private double randomDouble(double min, double max) {
         return min + (max - min) * random.nextDouble();
     }
 
