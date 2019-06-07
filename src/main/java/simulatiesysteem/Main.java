@@ -89,7 +89,7 @@ public class Main {
         // NOTE: Same buffer size and seed as in the administratie test data.
         byte[] buffer = new byte[10];
         Random r = new Random(665198248186247L);
-        for (int i = 0; i < 2000; i += 1) {
+        for (int i = 0; i < vehicles; i += 1) {
             r.nextBytes(buffer);
             String uuid = "FR_" + UUID.nameUUIDFromBytes(buffer).toString();
             trackers.add(uuid);
@@ -98,7 +98,7 @@ public class Main {
         Set<String> ts = trackerApi.getTrackers();
         trackers.addAll(ts);
 
-        simulations = new HashSet<>(vehicles);
+        simulations = new HashSet<>(vehicles + ts.size());
         for(String trackerId : trackers){
             Simulation simulation = new Simulation(trackerId, sender, props);
             simulations.add(simulation);
