@@ -34,6 +34,9 @@ public abstract class TrackerBaseAPI {
     public Set<String> getTrackers(){
         String url = getUrl();
         String response = fetchTrackers(url);
+        
+        if("".equals(response))
+            return null;
 
         Type setType = new TypeToken<Set<TrackerJson>>() {}.getType();
         Set<TrackerJson> rawTrackers = gson.fromJson(response, setType);

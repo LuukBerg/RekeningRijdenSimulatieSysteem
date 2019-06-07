@@ -16,19 +16,21 @@ import java.util.Set;
 public final class TrackerCollectionAPI extends TrackerBaseAPI {
 
     private final Set<TrackerBaseAPI> apis;
-    
-    public TrackerCollectionAPI(){
+
+    public TrackerCollectionAPI() {
         this.apis = new HashSet<>();
         this.apis.add(new TrackerBelgiumAPI());
         this.apis.add(new TrackerNetherlandsAPI());
     }
-    
+
     @Override
     public Set<String> getTrackers() {
         Set<String> trackers = new HashSet<>();
-        for(TrackerBaseAPI api : apis){
+        for (TrackerBaseAPI api : apis) {
             Set<String> t = api.getTrackers();
-            trackers.addAll(t);
+            if (t != null) {
+                trackers.addAll(t);
+            }
         }
         return Collections.unmodifiableSet(trackers);
     }
@@ -37,5 +39,5 @@ public final class TrackerCollectionAPI extends TrackerBaseAPI {
     protected String getUrl() {
         return "";
     }
-    
+
 }
