@@ -134,11 +134,11 @@ public class Main {
                 while(iterator.hasNext()){
                     Simulation simulation = iterator.next();
                     if (!simulation.step()) {
-                        simulations.remove(simulation);
+                        iterator.remove();
                     }
                 }
             }
-        }, 0, STEP_TIME * 1000);
+        }, 0, STEP_TIME );
     }
 
     private double randomDouble(double min, double max) {
