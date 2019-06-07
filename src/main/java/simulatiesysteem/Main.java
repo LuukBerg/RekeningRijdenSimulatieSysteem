@@ -138,7 +138,7 @@ public class Main {
                     }
                 }
             }
-        }, 0, STEP_TIME );
+        }, 0, STEP_TIME * 1000);
     }
 
     private double randomDouble(double min, double max) {
